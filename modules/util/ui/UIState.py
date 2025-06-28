@@ -5,7 +5,6 @@ from enum import Enum
 from typing import Any
 
 from modules.util.config.BaseConfig import BaseConfig
-from modules.util.type_util import issubclass_safe
 
 
 class UIState:
@@ -168,7 +167,7 @@ class UIState:
         if is_config:
             for name, var_type in obj.types.items():
                 obj_var = getattr(obj, name)
-                if issubclass_safe(var_type, BaseConfig):
+                if issubclass(var_type, BaseConfig):
                     var = UIState(self.master, obj_var)
                     new_vars[name] = var
                 elif var_type is str:
@@ -176,7 +175,7 @@ class UIState:
                     var.set("" if obj_var is None else obj_var)
                     var.trace_add("write", self.__set_str_var(obj, is_dict, name, var, obj.nullables[name]))
                     new_vars[name] = var
-                elif issubclass_safe(var_type, Enum):
+                elif issubclass(var_type, Enum):
                     var = tk.StringVar(master=self.master)
                     var.set("" if obj_var is None else str(obj_var))
                     var.trace_add("write", self.__set_enum_var(obj, is_dict, name, var, var_type, obj.nullables[name]))
@@ -236,13 +235,13 @@ class UIState:
         if is_config:
             for name, var_type in obj.types.items():
                 obj_var = getattr(obj, name)
-                if issubclass_safe(var_type, BaseConfig):
+                if issubclass(var_type, BaseConfig):
                     var = self.__vars[name]
                     var.__set_vars(obj_var)
                 elif var_type is str:
                     var = self.__vars[name]
                     var.set("" if obj_var is None else obj_var)
-                elif issubclass_safe(var_type, Enum):
+                elif issubclass(var_type, Enum):
                     var = self.__vars[name]
                     var.set("" if obj_var is None else str(obj_var))
                 elif var_type is bool:
